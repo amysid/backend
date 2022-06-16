@@ -1,0 +1,3 @@
+<h1> Welcome <%=@user.full_name %></h1>
+<p> please click on this link to access the audio library </p>
+<%= link_to("Invitation Link",change_password_url(auth_token: @user.verificatin_link),method: :post)%>
