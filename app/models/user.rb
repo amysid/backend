@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :booths
   scope :active, -> { where(status: "Active")}
 
-  after_create :send_invitation
+  # after_create :send_invitation
 
   def accessible_features
     if self.role == "operator"

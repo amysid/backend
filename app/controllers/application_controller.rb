@@ -1,5 +1,14 @@
 class ApplicationController < ActionController::API
 
+  rescue_from ActionController::ParameterMissing, with: :handle_missing_parameters
+
+  wrap_parameters false
+
+  def handle_missing_parameters
+    head :bad_request
+  end
+
+
   def not_found
     render json: { error: 'not_found' }
   end
