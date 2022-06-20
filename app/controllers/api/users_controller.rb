@@ -2,7 +2,7 @@ class Api::UsersController < ::ApplicationController
   before_action :authorize_request
   before_action :set_user, except: [:index, :create]
   before_action :ensure_user_present!, except: [:index, :create]
-  
+  #deploy
   def index
     per_page = params[:per_page] || 10
     @users = User.all.order('created_at desc').paginate(page: params[:page], per_page: per_page)
