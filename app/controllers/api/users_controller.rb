@@ -31,6 +31,14 @@ class Api::UsersController < ::ApplicationController
     end
   end
 
+  def change_status
+    @user = User.find_by(id: params[:id])
+    status = @user.status == "Active" ? "Blocked" : "Active"
+    @user.update(status: status)
+    message = "User updated successfully!"
+    return render json: { message: [message]}
+  end
+
   def update
     @user.update(user_params)
     render_user
