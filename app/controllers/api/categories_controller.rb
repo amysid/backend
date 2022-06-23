@@ -10,7 +10,12 @@ class Api::CategoriesController < ::ApplicationController
   end
 
   def create
-    @category = Category.new(category_params)
+    @category = Category.new({
+      name: params[:category][:name],
+      arabic_name: params[:category][:arabic_name],
+      icon: params[:category][:icon],
+      white_icon: params[:category][:white_icon]
+      })
     if @category.save
       render_category
     else
@@ -31,7 +36,13 @@ class Api::CategoriesController < ::ApplicationController
   end
 
   def update
-    @category.update(category_params)
+    byebug
+    @category.update({
+      name: params[:category][:name],
+      arabic_name: params[:category][:arabic_name],
+      icon: params[:category][:icon],
+      white_icon: params[:category][:white_icon]
+    })
     render_category
   end
   
