@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       end
       resources :categories
       resources :booths
+      resources :operations
     end
   end
 end

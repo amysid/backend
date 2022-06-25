@@ -14,6 +14,7 @@ class Api::BoothsController < ::ApplicationController
   def create
     @booth = Booth.new(booth_params)
     if @booth.save
+      @booth.categories << @categories
       render_booth
     else
       render json: { errors: @booth.errors.messages }, status: :forbidden
@@ -34,6 +35,7 @@ class Api::BoothsController < ::ApplicationController
 
   def update
     @booth.update(booth_params)
+    @booth.categories << @new_categories
     render_booth
   end
   
@@ -61,7 +63,7 @@ class Api::BoothsController < ::ApplicationController
     @user = User.find_by(id:params[:booth][:user_id])
     @categories = Category.where(id: params[:booth][:category_id])
     if @categories.blank?
-      redirect_to booths_path, alert: t("user_category_record_errors")
+      return render json: { errors: ["Data not present or booth not authorized"] }, status: :forbidden
     end
   end
 

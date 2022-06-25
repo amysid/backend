@@ -36,7 +36,6 @@ class Api::CategoriesController < ::ApplicationController
   end
 
   def update
-    byebug
     @category.update({
       name: params[:category][:name],
       arabic_name: params[:category][:arabic_name],
