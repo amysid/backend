@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :categories
       resources :booths
       resources :operations
+      resources :books
     end
   end
 end
