@@ -42,3 +42,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'jwt', '~> 2.4', '>= 2.4.1'
 gem 'fast_jsonapi'
 gem 'will_paginate', '~> 3.1', '>= 3.1.7'
+gem "groupdate"
