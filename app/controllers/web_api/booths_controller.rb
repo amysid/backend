@@ -1,6 +1,6 @@
 class WebApi::BoothsController < ::ApplicationController
-  before_action :set_booth, only: [:show, :booth_cover_urls]
-  before_action :ensure_booth_present!, only: [:show, :booth_cover_urls] 
+  before_action :set_booth, only: [:show, :booth_cover_urls, :categories]
+  before_action :ensure_booth_present!, only: [:show, :booth_cover_urls, :categories] 
   
   def index
     per_page = params[:per_page] || 10
@@ -19,11 +19,25 @@ class WebApi::BoothsController < ::ApplicationController
     data["book_cover_urls"] = []
     if @books.present?
       book_cover_urls = @books.map do |book|
-        book.book_files.first.book_cover_file.url resuce nil
+        book.book_files.first.book_cover_file.url rescue nil
       end
       data["book_cover_urls"] = book_cover_urls
     end
     render json: {data: data}, status: :ok
+  end
+
+  def categories
+    @categories = @booth.categories
+    render json: {
+      multi_data: true,
+      categories: CategorySerializer.new(
+        @categories,
+        {
+          meta: {
+          },
+        }
+      ),
+    }, status: :ok 
   end
   
   private
@@ -36,6 +50,13 @@ class WebApi::BoothsController < ::ApplicationController
     return true if @booth.present?
 
     return render json: { errors: ["Data not present or booth not authorized"] }, status: :forbidden
+  end
+  
+  def fetch_categories
+    @categories = @booth.categories
+    if params[:category_id].present?
+      @categories = @categories.includes(:books).where(id: params[:category_id])
+    end
   end
 
   def render_booth

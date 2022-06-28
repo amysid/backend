@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     scope "(:locale)", locale: /en|ar/ do
       resources :booths do 
         get :booth_cover_urls, on: :member
+        get :categories,on: :member
+        resources :books
       end
     end
   end
