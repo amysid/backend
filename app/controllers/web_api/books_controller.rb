@@ -20,7 +20,25 @@ class WebApi::BooksController < ::ApplicationController
 
 
   def show
-    render_booth
+    @book = Book.where(id: params[:id]).first
+    operation = Operation.create(booth_id: @booth.id, book_id: @book.id)
+    
+    #path = media_files_web_operation_url(id: operation.number)
+    path = "#{ENV["FRONTEND_URL"]}/#{params[:locale]}/web/operations/#{operation.number}/media_files"
+    @qr_code = RQRCode::QRCode.new(path)
+    @qr_png = @qr_code.as_png(
+      bit_depth: 1,
+      border_modules: 4,
+      color_mode: ChunkyPNG::COLOR_GRAYSCALE,
+      color: "black",
+      file: nil,
+      fill: "white",
+      module_px_size: 10,
+      resize_exactly_to: false,
+      resize_gte_to: false,
+      size: 140
+    )
+    render_book
   end
 
   def booth_cover_urls
@@ -46,6 +64,16 @@ class WebApi::BooksController < ::ApplicationController
     return true if @booth.present?
 
     return render json: { errors: ["Data not present or booth not authorized"] }, status: :forbidden
+  end
+
+  def render_book
+    render json: {
+      multi_data: true,
+      book: BookSerializer.new(
+        @book,
+      ),
+      qr_png_link:"data:image/png;base64,#{Base64.encode64(@qr_png.to_s).gsub("\n", "")}"
+    }, status: :ok 
   end
 
 end

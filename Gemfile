@@ -43,3 +43,6 @@ gem 'jwt', '~> 2.4', '>= 2.4.1'
 gem 'fast_jsonapi'
 gem 'will_paginate', '~> 3.1', '>= 3.1.7'
 gem "groupdate"
+gem 'rqrcode', '~> 2.1', '>= 2.1.1'
+gem 'cloudinary', '~> 1.22'
+

@@ -6,6 +6,12 @@ Rails.application.routes.draw do
         get :booth_cover_urls, on: :member
         get :categories,on: :member
         resources :books
+
+        resources :operations, only: [] do
+          get :media_files, on: :member
+          get :update_listen_count, on: :member
+          put :save_feedback, on: :member
+        end
       end
     end
   end
