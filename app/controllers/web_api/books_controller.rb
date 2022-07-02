@@ -1,7 +1,7 @@
 class WebApi::BooksController < ::ApplicationController
   before_action :set_booth
   before_action :ensure_booth_present!
-  # before_action :fetch_categories, only: [:index]
+  before_action :fetch_categories, only: [:index, :category_search]
   
   def index
     book_ids = @booth.books.pluck(:book_id)
@@ -16,6 +16,62 @@ class WebApi::BooksController < ::ApplicationController
       books: BookSerializer.new(@books),
       trending_books: BookSerializer.new(@trending_books),
     }, status: :ok
+  end
+
+  def search 
+    if params[:book].present?
+      book_ids = @booth.books.pluck(:book_id)
+      @books = Book.includes(:book_files).where(id: book_ids, status: "Published").order('created_at desc')
+      @books = @books.includes(:book_files).where("books.title ILIKE ? OR books.author_name ILIKE ?  OR books.body ILIKE ?", "%#{params[:book]}%", "%#{params[:book]}%", "%#{params[:book]}%" ).order('created_at desc')
+    end
+    if params[:type] == "all"
+     @books = @books
+    elsif params[:type] == "short"
+      @books = @books.where(audio_type: "Short") if @books.present?
+    elsif params[:type] == "long"
+      @books = @books.where(audio_type: "Long") if @books.present?
+    end
+    render_books
+  end
+
+  def category_search
+    if params[:category_id].present?
+      book_ids = @booth.books.pluck(:book_id)
+      @books = Book.includes(:book_files).where(id: book_ids, status: "Published")
+      book_ids = @categories.pluck(:book_id)
+      @books = @books.where(id: book_ids)
+      @total_books = @books.count || 0
+      total_time = @books.pluck(:book_duration).sum
+      @total_time = Time.at(total_time).utc.strftime("%Hh %M minute")
+      @total_author_count = @books.pluck(:author_name).uniq.count || 0
+      
+      if params[:type] == "all"
+        @books = @books
+      elsif params[:type] == "short"
+        @books = @books.where(audio_type: "Short")
+      elsif params[:type] == "long"
+        @books = @books.where(audio_type: "Long")
+      end
+    end
+    render json: {
+      multi_data: true,
+      books: BookSerializer.new(@books),
+      total_books: @total_books,
+      total_time: @total_time,
+      total_author_count: @total_author_count
+    }, status: :ok
+  end
+
+  def category_datail
+    @category = Category.where(id: params[:category_id]).first
+    return render json: {errors: ["Category not present!"]}, status: :forbidden if @category.blank?
+
+    render json: {
+      multi_data: true,
+      category: CategorySerializer.new(
+        @category
+      ),
+    }, status: :ok 
   end
 
 
@@ -41,6 +97,22 @@ class WebApi::BooksController < ::ApplicationController
     render_book
   end
 
+  def accessibility_mode
+    book_ids = @booth.books.pluck(:book_id)
+    @books = Book.includes(:book_files).where(id: book_ids, status: "Published").order('created_at desc')
+    render_books
+  end
+
+  def children_mode
+    @children_category = Category.where(name: "Children’s books").first
+    if @children_category.present?
+      cat_book_ids = @children_category.books.pluck(:id)
+      book_ids = @booth.books.pluck(:book_id) & cat_book_ids
+      @books = Book.includes(:book_files).where(id: book_ids, status: "Published").order('created_at desc')
+    end
+    render_books
+  end
+
   def booth_cover_urls
     @books = @booth.books.limit(8).shuffle
     data = {}
@@ -55,6 +127,13 @@ class WebApi::BooksController < ::ApplicationController
   end
   
   private
+
+  def fetch_categories
+    @categories = @booth.categories
+    if params[:category_id].present?
+      @categories = @categories.includes(:books).where(id: params[:category_id])
+    end
+  end
 
   def set_booth
     @booth = Booth.where(number: params[:booth_id]).first
@@ -74,6 +153,13 @@ class WebApi::BooksController < ::ApplicationController
       ),
       qr_png_link:"data:image/png;base64,#{Base64.encode64(@qr_png.to_s).gsub("\n", "")}"
     }, status: :ok 
+  end
+
+  def render_books
+    render json: {
+      multi_data: true,
+      books: BookSerializer.new(@books)
+    }, status: :ok
   end
 
 end

@@ -5,7 +5,13 @@ Rails.application.routes.draw do
       resources :booths do 
         get :booth_cover_urls, on: :member
         get :categories,on: :member
-        resources :books
+        resources :books do
+          get :accessibility_mode, on: :collection
+          get :children_mode, on: :collection
+          get :search, on: :collection
+          get :category_search, on: :collection
+          get :category_datail, on: :collection
+        end
 
         resources :operations, only: [] do
           get :media_files, on: :member
