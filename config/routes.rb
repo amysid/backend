@@ -12,12 +12,11 @@ Rails.application.routes.draw do
           get :category_search, on: :collection
           get :category_datail, on: :collection
         end
-
-        resources :operations, only: [] do
-          get :media_files, on: :member
-          get :update_listen_count, on: :member
-          put :save_feedback, on: :member
-        end
+      end
+      resources :operations, only: [] do
+        get :media_files, on: :member
+        get :update_listen_count, on: :member
+        put :save_feedback, on: :member
       end
     end
   end
