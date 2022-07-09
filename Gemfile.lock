@@ -74,6 +74,10 @@ GEM
     crass (1.0.6)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
     fast_jsonapi (1.5)
       activesupport (>= 4.2)
@@ -189,6 +193,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   byebug
   cloudinary (~> 1.22)
+  dotenv-rails
   fast_jsonapi
   groupdate
   jwt (~> 2.4, >= 2.4.1)
