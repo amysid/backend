@@ -25,4 +25,16 @@ class BookSerializer  < ApplicationSerializer
     Time.at(total).utc.strftime("%H:%M:%S")
   end
 
+  attribute :book_cover_file_url do |book, _params|
+    ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.book_cover_file , only_path: true) if book.book_cover_file.present?
+  end
+
+  attribute :audio_url do |book, _params|
+    ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.audio , only_path: true) if book.audio.present?
+  end
+  
+  attribute :short_audio_url do |book, _params|
+    ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.short_audio_file , only_path: true) if book.short_audio_file.present?
+  end
+
 end

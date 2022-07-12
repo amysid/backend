@@ -80,7 +80,10 @@ class WebApi::BooksController < ::ApplicationController
     operation = Operation.create(booth_id: @booth.id, book_id: @book.id)
     
     #path = media_files_web_operation_url(id: operation.number)
-    path = "#{ENV["FRONTEND_URL"]}/#{params[:locale]}/web/operations/#{operation.number}/media_files"
+    path = "#{ENV["FRONTEND_URL"]}/web/operations/#{operation.number}/media_files"
+    if params[:locale].present?
+      path = "#{ENV["FRONTEND_URL"]}/#{params[:locale]}/web/operations/#{operation.number}/media_files"
+    end
     @qr_code = RQRCode::QRCode.new(path)
     @qr_png = @qr_code.as_png(
       bit_depth: 1,
