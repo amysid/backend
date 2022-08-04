@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   
   namespace :web_api do
     scope "(:locale)", locale: /en|ar/ do
+
+      get "all_books", to: "books#all_books"
+      get "create_operation_for_blind", to: "books#create_operation_for_blind"
+      
       resources :booths do 
         get :booth_cover_urls, on: :member
         get :categories,on: :member

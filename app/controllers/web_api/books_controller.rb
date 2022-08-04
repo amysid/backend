@@ -1,6 +1,6 @@
 class WebApi::BooksController < ::ApplicationController
-  before_action :set_booth
-  before_action :ensure_booth_present!
+  before_action :set_booth,  except: [:all_books, :create_operation_for_blind]
+  before_action :ensure_booth_present!,  except: [:all_books, :create_operation_for_blind]
   before_action :fetch_categories, only: [:index, :category_search]
   
   def index
@@ -72,6 +72,21 @@ class WebApi::BooksController < ::ApplicationController
         @category
       ),
     }, status: :ok 
+  end
+
+  def all_books
+    @books = Book.includes(:book_files).where(status: "Published").order('created_at desc')
+    render json: {
+      multi_data: true,
+      books: BookSerializer.new(@books),
+    }, status: :ok
+  end
+
+  def create_operation_for_blind
+    book = Book.find_by(id: params[:id])
+    booth = Booth.where(name: "Blind").first_or_create
+    operation = Operation.create(book_id: book.id, booth_id: booth.id)
+    return render json: {operation_number: operation.number}, status: :ok
   end
 
 
