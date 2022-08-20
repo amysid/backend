@@ -26,7 +26,8 @@ Rails.application.configure do
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # config.active_storage.service = :local
+  config.active_storage.service = :cloudinary
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -49,4 +50,17 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  config.action_mailer.default_url_options = {:host => "localhost:3000"}
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true #Needed if this is dev env. file
+  config.action_mailer.smtp_settings = {
+    address:                 'smtp.gmail.com',
+    port:                     587,
+    domain:                   'localhost',
+    user_name:                 ENV["SMTP_USER_NAME"],
+    password:                  ENV["SMTP_PASSWORD"],
+    authentication:           'plain',
+    enable_starttls_auto:    true
+  }
 end

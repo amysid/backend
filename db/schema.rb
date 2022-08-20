@@ -12,10 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2022_06_07_172839) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "active_storage_attachments", force: :cascade do |t|
+  create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
@@ -25,7 +22,7 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", force: :cascade do |t|
+  create_table "active_storage_blobs", charset: "utf8mb4", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -37,24 +34,24 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "book_files", force: :cascade do |t|
+  create_table "book_files", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "book_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["book_id"], name: "index_book_files_on_book_id"
   end
 
-  create_table "books", force: :cascade do |t|
+  create_table "books", charset: "utf8mb4", force: :cascade do |t|
     t.string "title"
     t.string "author_name"
     t.string "body"
-    t.decimal "book_duration", default: "0.0"
+    t.decimal "book_duration", precision: 10, default: "0"
     t.string "reason_for_rejection"
     t.integer "status", default: 0
     t.integer "listen_count", default: 0
@@ -68,14 +65,14 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.string "arabic_body"
   end
 
-  create_table "books_categories", id: false, force: :cascade do |t|
+  create_table "books_categories", id: false, charset: "utf8mb4", force: :cascade do |t|
     t.bigint "book_id", null: false
     t.bigint "category_id", null: false
     t.index ["book_id", "category_id"], name: "index_books_categories_on_book_id_and_category_id"
     t.index ["category_id", "book_id"], name: "index_books_categories_on_category_id_and_book_id"
   end
 
-  create_table "booths", force: :cascade do |t|
+  create_table "booths", charset: "utf8mb4", force: :cascade do |t|
     t.string "number"
     t.string "name"
     t.string "city"
@@ -92,21 +89,21 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.index ["number"], name: "index_booths_on_number"
   end
 
-  create_table "booths_categories", id: false, force: :cascade do |t|
+  create_table "booths_categories", id: false, charset: "utf8mb4", force: :cascade do |t|
     t.bigint "booth_id", null: false
     t.bigint "category_id", null: false
     t.index ["booth_id", "category_id"], name: "index_booths_categories_on_booth_id_and_category_id"
     t.index ["category_id", "booth_id"], name: "index_booths_categories_on_category_id_and_booth_id"
   end
 
-  create_table "booths_users", id: false, force: :cascade do |t|
+  create_table "booths_users", id: false, charset: "utf8mb4", force: :cascade do |t|
     t.bigint "booth_id", null: false
     t.bigint "user_id", null: false
     t.index ["booth_id", "user_id"], name: "index_booths_users_on_booth_id_and_user_id"
     t.index ["user_id", "booth_id"], name: "index_booths_users_on_user_id_and_booth_id"
   end
 
-  create_table "categories", force: :cascade do |t|
+  create_table "categories", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "arabic_name"
     t.integer "status", default: 0
@@ -114,9 +111,9 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "operations", force: :cascade do |t|
+  create_table "operations", charset: "utf8mb4", force: :cascade do |t|
     t.string "number"
-    t.decimal "listening_status"
+    t.decimal "listening_status", precision: 10
     t.datetime "listening_time"
     t.string "rating"
     t.string "note"
@@ -129,7 +126,7 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.index ["booth_id"], name: "index_operations_on_booth_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "full_name", default: ""
     t.string "mobile", default: ""
     t.string "email", default: ""

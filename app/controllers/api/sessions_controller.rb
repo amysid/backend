@@ -18,7 +18,9 @@ class Api::SessionsController < ::ApplicationController
       token: token,
       id: @user.id,
       name: @user.full_name,
-      email: @user.email
+      email: @user.email,
+      role: @user.role,
+      status: @user.status
     }
   end
 

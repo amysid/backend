@@ -6,7 +6,8 @@ ruby '2.6.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 # Use postgresql as the database for Active Record
-gem 'pg', '>= 0.18', '< 2.0'
+# gem 'pg', '>= 0.18', '< 2.0'
+gem 'mysql2', '~> 0.5.2'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -28,6 +29,8 @@ gem 'bootsnap', '>= 1.4.2', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'dotenv-rails', require: 'dotenv/rails-now'
+
 end
 
 group :development do
@@ -42,3 +45,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'jwt', '~> 2.4', '>= 2.4.1'
 gem 'fast_jsonapi'
 gem 'will_paginate', '~> 3.1', '>= 3.1.7'
+gem "groupdate"
+gem 'rqrcode', '~> 2.1', '>= 2.1.1'
+gem 'cloudinary', '~> 1.22'
+gem 'rack-cors'
+
