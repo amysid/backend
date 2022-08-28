@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       resources :booths
       resources :operations
       resources :homes
+      resources :reports
       resources :books do 
         get :change_status, on: :member
       end
