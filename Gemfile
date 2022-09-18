@@ -49,4 +49,5 @@ gem "groupdate"
 gem 'rqrcode', '~> 2.1', '>= 2.1.1'
 gem 'cloudinary', '~> 1.22'
 gem 'rack-cors'
+gem "figaro"
 
