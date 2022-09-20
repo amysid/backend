@@ -27,7 +27,7 @@ class Api::CategoriesController < ::ApplicationController
   def show
     render_category
   end
-
+#working
   def destroy
     if @category.destroy
       render json: { message: ["User Destroy Successfully!"], status_code: 200 }, status: :ok
