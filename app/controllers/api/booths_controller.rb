@@ -27,7 +27,7 @@ class Api::BoothsController < ::ApplicationController
 
   def destroy
     if @booth.destroy
-      render json: { message: ["booth Destroy Successfully!"] }, status: :ok
+      render json: { message: ["booth Destroy Successfully!"], status_code: 200 }, status: :ok
     else
       render json: { errors: @booth.errors.messages }, status: :forbidden
     end

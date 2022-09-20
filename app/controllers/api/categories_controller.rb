@@ -29,7 +29,7 @@ class Api::CategoriesController < ::ApplicationController
 
   def destroy
     if @category.destroy
-      render json: { message: ["User Destroy Successfully!"] }, status: :ok
+      render json: { message: ["User Destroy Successfully!"], status_code: 200 }, status: :ok
     else
       render json: { errors: @category.errors.messages }, status: :forbidden
     end
