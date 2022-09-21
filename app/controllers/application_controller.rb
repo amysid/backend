@@ -2,6 +2,8 @@ class ApplicationController < ActionController::API
 
   rescue_from ActionController::ParameterMissing, with: :handle_missing_parameters
   include Rails.application.routes.url_helpers
+  include Pagy::Backend
+
 
   wrap_parameters false
 

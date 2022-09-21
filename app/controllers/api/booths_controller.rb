@@ -6,8 +6,12 @@ class Api::BoothsController < ::ApplicationController
   before_action :update_category_record, only: [:update]
   
   def index
-    per_page = params[:per_page] || 10
-    @booths = Booth.all.order('created_at desc').paginate(page: params[:page], per_page: per_page)
+    @booths = Booth.all.order('created_at desc')
+    @pagination, @booths = pagy(
+      @booths,
+      items: params[:page_size] || 10,
+      page: params[:page] || 1
+    )
     render_booths
   end
 
@@ -90,6 +94,10 @@ class Api::BoothsController < ::ApplicationController
         @booths,
         {
           meta: {
+            total: @pagination.count,
+            page: @pagination.page,
+            page_size: @pagination.items,
+            total_pages: @pagination.pages
           },
         }
       ),

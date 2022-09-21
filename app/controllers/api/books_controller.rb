@@ -6,8 +6,12 @@ class Api::BooksController < ::ApplicationController
   before_action :update_category_record, only: [:update]
 
   def index
-    per_page = params[:per_page] || 10
-    @books = Book.all.includes(:operations).order('created_at desc').paginate(page: params[:page], per_page: per_page)
+    @books = Book.all.includes(:operations).order('created_at desc')
+    @pagination, @books = pagy(
+      @books,
+      items: params[:page_size] || 10,
+      page: params[:page] || 1
+    )
     render_books
   end
   
@@ -99,6 +103,10 @@ class Api::BooksController < ::ApplicationController
         @books,
         {
           meta: {
+            total: @pagination.count,
+            page: @pagination.page,
+            page_size: @pagination.items,
+            total_pages: @pagination.pages
           },
         }
       ),

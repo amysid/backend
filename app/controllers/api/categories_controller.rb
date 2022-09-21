@@ -4,8 +4,12 @@ class Api::CategoriesController < ::ApplicationController
   before_action :ensure_category_present!, except: [:index, :create]
   
   def index
-    per_page = params[:per_page] || 10
-    @categories = Category.all.order('created_at desc').paginate(page: params[:page], per_page: per_page)
+    @categories = Category.all.order('created_at desc')
+    @pagination, @categories = pagy(
+      @categories,
+      items: params[:page_size] || 10,
+      page: params[:page] || 1
+    )
     render_categories
   end
 
@@ -77,6 +81,10 @@ class Api::CategoriesController < ::ApplicationController
         @categories,
         {
           meta: {
+            total: @pagination.count,
+            page: @pagination.page,
+            page_size: @pagination.items,
+            total_pages: @pagination.pages
           },
         }
       ),

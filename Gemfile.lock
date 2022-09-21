@@ -117,6 +117,8 @@ GEM
     nokogiri (1.13.6)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    pagy (5.10.1)
+      activesupport
     puma (4.3.12)
       nio4r (~> 2.0)
     racc (1.6.0)
@@ -184,7 +186,6 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    will_paginate (3.3.1)
     zeitwerk (2.6.0)
 
 PLATFORMS
@@ -202,6 +203,7 @@ DEPENDENCIES
   jwt (~> 2.4, >= 2.4.1)
   listen (~> 3.2)
   mysql2 (~> 0.5.2)
+  pagy
   puma (~> 4.1)
   rack-cors
   rails (~> 6.1.4, >= 6.1.4.1)
@@ -209,7 +211,6 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
-  will_paginate (~> 3.1, >= 3.1.7)
 
 RUBY VERSION
    ruby 2.6.3p62

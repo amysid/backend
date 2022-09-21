@@ -4,8 +4,12 @@ class Api::UsersController < ::ApplicationController
   before_action :ensure_user_present!, except: [:index, :create]
   #deploy
   def index
-    per_page = params[:per_page] || 10
-    @users = User.all.order('created_at desc').paginate(page: params[:page], per_page: per_page)
+    @users = User.all.order('created_at desc')
+    @pagination, @users = pagy(
+      @users,
+      items: params[:page_size] || 10,
+      page: params[:page] || 1
+    )
     render_users
   end
 
@@ -76,6 +80,10 @@ class Api::UsersController < ::ApplicationController
         @users,
         {
           meta: {
+            total: @pagination.count,
+            page: @pagination.page,
+            page_size: @pagination.items,
+            total_pages: @pagination.pages
           },
         }
       ),
