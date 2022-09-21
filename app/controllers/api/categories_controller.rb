@@ -17,6 +17,7 @@ class Api::CategoriesController < ::ApplicationController
     @category = Category.new({
       name: params[:category][:name],
       arabic_name: params[:category][:arabic_name],
+      french_name: params[:category][:french_name],
       icon: params[:category][:icon],
       white_icon: params[:category][:white_icon]
       })
@@ -30,7 +31,7 @@ class Api::CategoriesController < ::ApplicationController
   def show
     render_category
   end
-
+#working
   def destroy
     if @category.destroy
       render json: { message: ["User Destroy Successfully!"], status_code: 200 }, status: :ok
@@ -43,6 +44,7 @@ class Api::CategoriesController < ::ApplicationController
     @category.update({
       name: params[:category][:name],
       arabic_name: params[:category][:arabic_name],
+      french_name: params[:category][:french_name],
       icon: params[:category][:icon],
       white_icon: params[:category][:white_icon]
     })
@@ -52,7 +54,7 @@ class Api::CategoriesController < ::ApplicationController
   private
 
   def category_params
-    params.require(:category).permit(:name, :arabic_name, :icon, :white_icon)
+    params.require(:category).permit(:name, :arabic_name, :french_name, :icon, :white_icon)
   end
 
   def set_category
