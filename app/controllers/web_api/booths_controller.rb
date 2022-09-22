@@ -4,7 +4,7 @@ class WebApi::BoothsController < ::ApplicationController
   
   def index
     per_page = params[:per_page] || 10
-    @booths = Booth.all.order('created_at desc').paginate(page: params[:page], per_page: per_page)
+    @booths = Booth.all.order('created_at desc')
     render_booths
   end
 
