@@ -5,7 +5,7 @@ class WebApi::BooksController < ::ApplicationController
   
   def index
     book_ids = @booth.books.pluck(:book_id)
-    @books = Book.includes(:book_files).where(id: book_ids, status: "Published").order('created_at desc')
+    @books = Book.where(id: book_ids, status: "Published").order('created_at desc')
     
     book_ids_from_operation = Operation.where(booth_id: @booth.id).pluck(:book_id)
     @trending_books = @books.where(id: book_ids_from_operation)
@@ -21,8 +21,8 @@ class WebApi::BooksController < ::ApplicationController
   def search 
     if params[:book].present?
       book_ids = @booth.books.pluck(:book_id)
-      @books = Book.includes(:book_files).where(id: book_ids, status: "Published").order('created_at desc')
-      @books = @books.includes(:book_files).where("books.title ILIKE ? OR books.author_name ILIKE ?  OR books.body ILIKE ?", "%#{params[:book]}%", "%#{params[:book]}%", "%#{params[:book]}%" ).order('created_at desc')
+      @books = Book.where(id: book_ids, status: "Published").order('created_at desc')
+      @books = @books.where("books.title LIKE ? OR books.author_name LIKE ?  OR books.body LIKE ?", "%#{params[:book]}%", "%#{params[:book]}%", "%#{params[:book]}%" ).order('created_at desc')
     end
     if params[:type] == "all"
      @books = @books
@@ -37,7 +37,7 @@ class WebApi::BooksController < ::ApplicationController
   def category_search
     if params[:category_id].present?
       book_ids = @booth.books.pluck(:book_id)
-      @books = Book.includes(:book_files).where(id: book_ids, status: "Published")
+      @books = Book.where(id: book_ids, status: "Published")
       book_ids = @categories.pluck(:book_id)
       @books = @books.where(id: book_ids)
       @total_books = @books.count || 0
@@ -75,7 +75,7 @@ class WebApi::BooksController < ::ApplicationController
   end
 
   def all_books
-    @books = Book.includes(:book_files).where(status: "Published").order('created_at desc')
+    @books = Book.where(status: "Published").order('created_at desc')
     render json: {
       multi_data: true,
       books: BookSerializer.new(@books),
@@ -117,7 +117,7 @@ class WebApi::BooksController < ::ApplicationController
 
   def accessibility_mode
     book_ids = @booth.books.pluck(:book_id)
-    @books = Book.includes(:book_files).where(id: book_ids, status: "Published").order('created_at desc')
+    @books = Book.where(id: book_ids, status: "Published").order('created_at desc')
     render_books
   end
 
@@ -126,7 +126,7 @@ class WebApi::BooksController < ::ApplicationController
     if @children_category.present?
       cat_book_ids = @children_category.books.pluck(:id)
       book_ids = @booth.books.pluck(:book_id) & cat_book_ids
-      @books = Book.includes(:book_files).where(id: book_ids, status: "Published").order('created_at desc')
+      @books = Book.where(id: book_ids, status: "Published").order('created_at desc')
     end
     render_books
   end
