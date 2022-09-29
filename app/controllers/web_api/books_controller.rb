@@ -5,7 +5,7 @@ class WebApi::BooksController < ::ApplicationController
   
   def index
     book_ids = @booth.books.pluck(:book_id)
-    @books = Book.where(id: book_ids, status: "Published").order('created_at desc')
+    @books = Book.where(id: book_ids, status: "Published").order("RAND()")
     
     book_ids_from_operation = Operation.where(booth_id: @booth.id).pluck(:book_id)
     @trending_books = @books.where(id: book_ids_from_operation)
