@@ -20,7 +20,12 @@ class WebApi::BoothsController < ::ApplicationController
     if @books.present?
       book_cover_urls = @books.map do |book|
         # book.book_files.first.book_cover_file.url rescue nil
-        ENV["BACKEND_URL"] + rails_blob_path(book.book_cover_file , only_path: true) if book.book_cover_file.present?
+        info = {}
+        url = nil
+        url = ENV["BACKEND_URL"] + rails_blob_path(book.book_cover_file , only_path: true) if book.book_cover_file.present?
+        info["url"] = url
+        info["id"] = book.id
+        info
       end
       data["book_cover_urls"] = book_cover_urls
     end
