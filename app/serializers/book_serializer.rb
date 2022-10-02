@@ -20,6 +20,10 @@ class BookSerializer  < ApplicationSerializer
     book.categories.pluck(:name).join(",")
   end
 
+  attribute :display_ar_categories do |book, _params|
+    book.categories.pluck(:arabic_name).join(",")
+  end
+
   attribute :total_time do |book, _params|
     total = book.operations.sum(:listening_status)
     Time.at(total).utc.strftime("%H:%M:%S")
