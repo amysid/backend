@@ -6,11 +6,13 @@ class WebApi::OperationsController < ::ApplicationController
     @book = @operation.book
     language = params[:locale] == "en" ? "English" : "Arabic"
     @operation.update(language: language)
+    @booth = @operation.booth
     @book.update(last_listening_at: Time.now)
     render json: {
       multi_data: true,
       operation: OperationSerializer.new( @operation ),
       book: BookSerializer.new( @book ),
+      booth: BoothSerializer.new( @booth )
     }, status: :ok 
   end
 
