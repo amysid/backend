@@ -30,7 +30,8 @@ class BookSerializer  < ApplicationSerializer
   end
 
   attribute :book_cover_file_url do |book, _params|
-    ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.book_cover_file , only_path: true) if book.book_cover_file.present?
+    book.book_cover_file_url
+    #ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.book_cover_file , only_path: true) if book.book_cover_file.present?
   end
 
   attribute :audio_url do |book, _params|

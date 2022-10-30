@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_07_172839) do
+ActiveRecord::Schema.define(version: 2022_10_30_005727) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -63,6 +63,9 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.string "arabic_author_name"
     t.string "arabic_title"
     t.string "arabic_body"
+    t.string "book_cover_file_url"
+    t.string "audio_url"
+    t.string "short_audio_file_url"
   end
 
   create_table "books_categories", id: false, charset: "utf8mb4", force: :cascade do |t|
@@ -109,6 +112,9 @@ ActiveRecord::Schema.define(version: 2022_06_07_172839) do
     t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "french_name"
+    t.string "icon_url"
+    t.string "white_icon_url"
   end
 
   create_table "operations", charset: "utf8mb4", force: :cascade do |t|
