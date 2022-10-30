@@ -16,6 +16,8 @@ class Api::CategoriesController < ::ApplicationController
   def create
     @category = Category.new({
       name: params[:category][:name],
+      logo: params[:category][:dark],
+      white_logo: params[:category][:white],
       arabic_name: params[:category][:arabic_name],
       french_name: params[:category][:french_name],
       icon: params[:category][:icon],
@@ -43,6 +45,8 @@ class Api::CategoriesController < ::ApplicationController
   def update
     @category.update({
       name: params[:category][:name],
+      logo: params[:category][:dark],
+      white_logo: params[:category][:white],
       arabic_name: params[:category][:arabic_name],
       french_name: params[:category][:french_name],
       icon: params[:category][:icon],
@@ -54,7 +58,7 @@ class Api::CategoriesController < ::ApplicationController
   private
 
   def category_params
-    params.require(:category).permit(:name, :arabic_name, :french_name, :icon, :white_icon)
+    params.require(:category).permit(:name, :arabic_name, :french_name, :logo, :white_logo, :icon, :white_icon)
   end
 
   def set_category

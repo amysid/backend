@@ -2,7 +2,7 @@ class BookSerializer  < ApplicationSerializer
 
   attributes :id,  :title, :author_name, :body, :book_duration, :status, :reason_for_rejection,
               :listen_count, :last_listening_at, :created_at, :updated_at, :audio_type, :language,
-              :arabic_title, :arabic_body, :arabic_author_name
+              :arabic_title, :arabic_body, :arabic_author_name, :cover, :short, :long
 
   # attribute :last_listening do |book, _params|
   #   book.operations.last.created_at if book.operations.present?
