@@ -30,15 +30,18 @@ class BookSerializer  < ApplicationSerializer
   end
 
   attribute :book_cover_file_url do |book, _params|
-    ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.book_cover_file , only_path: true) if book.book_cover_file.present?
+    #ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.book_cover_file , only_path: true) if book.book_cover_file.present?
+   book.cover 
   end
 
   attribute :audio_url do |book, _params|
-    ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.audio , only_path: true) if book.audio.present?
+    #ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.audio , only_path: true) if book.audio.present?
+    book.long
   end
   
   attribute :short_audio_url do |book, _params|
-    ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.short_audio_file , only_path: true) if book.short_audio_file.present?
+    #ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.short_audio_file , only_path: true) if book.short_audio_file.present?
+    book.short
   end
 
 end
