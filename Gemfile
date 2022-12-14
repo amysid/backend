@@ -50,3 +50,4 @@ gem 'cloudinary', '~> 1.22'
 gem 'rack-cors'
 gem "figaro"
 gem 'pagy'
+gem 'rack-attack'
