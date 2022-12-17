@@ -3,7 +3,6 @@ class User < ApplicationRecord
   enum gender: ["Male", "Female"]
   enum role: ["Admin", "Approver", "operator"]
   enum status: ["Invited", "Active", "Blocked"]
-  has_many :books,dependent: :destroy
   has_and_belongs_to_many :booths
   scope :active, -> { where(status: "Active")}
 
