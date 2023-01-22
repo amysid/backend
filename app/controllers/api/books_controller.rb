@@ -26,7 +26,10 @@ class Api::BooksController < ::ApplicationController
   end
 
   def update 
-    if @book.update(book_params)
+    if @book.update(update_book_params)
+      @book.cover = params[:book][:cover] if params[:book][:cover].present?
+      @book.short = params[:book][:short] if  params[:book][:short].present?
+      @book.long = params[:book][:long] if  params[:book][:long].present?
       @book.categories << @new_categories
       render_book
     else
@@ -69,6 +72,12 @@ class Api::BooksController < ::ApplicationController
   def book_params
     params.require(:book).permit(:title, :language, :arabic_author_name, :arabic_title, :arabic_body, :author_name, :book_duration, :body,
       :user_id, :audio_type, :book_cover_file, :audio, :short_audio_file, :cover, :short, :long
+    )
+  end
+
+  def update_book_params
+    params.require(:book).permit(:title, :language, :arabic_author_name, :arabic_title, :arabic_body, :author_name, :book_duration, :body,
+      :user_id, :audio_type, :book_cover_file, :audio, :short_audio_file
     )
   end
 
