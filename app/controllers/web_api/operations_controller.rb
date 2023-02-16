@@ -21,6 +21,11 @@ class WebApi::OperationsController < ::ApplicationController
     total_time = params[:file_duration].to_f
     listen_time = current_listen_time.to_f
     @operation.update(listening_time: Time.now, listening_status: listen_time)
+    book = @operation.book
+    if book.present?
+      book.listen_count += 1
+      book.save
+    end
     render json: {message: "successfully save count"}
   end
 
@@ -32,7 +37,7 @@ class WebApi::OperationsController < ::ApplicationController
   private
 
   def set_operation
-    @operation = Operation.find_by(number: params[:id])
+    @operation = Operation.includes(:book).where(number: params[:id]).first
   end
 
   def ensure_operation_present?
