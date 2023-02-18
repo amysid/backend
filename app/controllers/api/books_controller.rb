@@ -6,7 +6,11 @@ class Api::BooksController < ::ApplicationController
   before_action :update_category_record, only: [:update]
 
   def index
-    @books = Book.all.includes(:operations).order('created_at desc')
+    if params["book"].present? && params["book"]["search"]
+      @books = Book.all.where("books.title LIKE ? OR books.author_name LIKE ?  OR books.body LIKE ?", "%#{params[:book][:search]}%", "%#{params[:book][:search]}%", "%#{params[:book][:search]}%" ).order('created_at desc')
+    else
+      @books = Book.all.includes(:operations).order('created_at desc')
+    end
     @pagination, @books = pagy(
       @books,
       items: params[:page_size] || 10,
