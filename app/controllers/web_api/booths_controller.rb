@@ -14,7 +14,7 @@ class WebApi::BoothsController < ::ApplicationController
   end
 
   def booth_cover_urls
-    @books = @booth.books.shuffle.take(8)
+    @books = @booth.books.where(status: "Published").shuffle.take(8)
     data = {}
     data["book_cover_urls"] = []
     if @books.present?
