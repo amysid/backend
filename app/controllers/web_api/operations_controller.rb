@@ -7,7 +7,9 @@ class WebApi::OperationsController < ::ApplicationController
     language = params[:locale] == "en" ? "English" : "Arabic"
     @operation.update(language: language)
     @booth = @operation.booth
-    @book.update(last_listening_at: Time.now)
+    count = @book.listen_count + 1
+    @book.update(last_listening_at: Time.now, listen_count: count) 
+    
     render json: {
       multi_data: true,
       operation: OperationSerializer.new( @operation ),
@@ -21,11 +23,6 @@ class WebApi::OperationsController < ::ApplicationController
     total_time = params[:file_duration].to_f
     listen_time = current_listen_time.to_f
     @operation.update(listening_time: Time.now, listening_status: listen_time)
-    book = @operation.book
-    if book.present?
-      book.listen_count += 1
-      book.save
-    end
     render json: {message: "successfully save count"}
   end
 
