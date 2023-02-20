@@ -1,12 +1,24 @@
 class BookSerializer  < ApplicationSerializer
 
   attributes :id,  :title, :author_name, :body, :book_duration, :status, :reason_for_rejection,
-              :listen_count, :last_listening_at, :created_at, :updated_at, :audio_type, :language,
+              :listen_count, :audio_type, :language,
               :arabic_title, :arabic_body, :arabic_author_name, :cover, :short, :long
 
   # attribute :last_listening do |book, _params|
   #   book.operations.last.created_at if book.operations.present?
   # end
+
+  attribute :last_listening_at do |book, _params|
+    book.last_listening_at.present? ? book.last_listening_at.in_time_zone("Asia/Riyadh") : nil
+  end
+
+  attribute :created_at do |book, _params|
+    book.created_at.in_time_zone("Asia/Riyadh")
+  end
+
+  attribute :updated_at do |book, _params|
+    book.updated_at.in_time_zone("Asia/Riyadh")
+  end
 
   attribute :selected_categories do |book, _param|
     book.categories.present? ? book.categories.pluck(:name, :id) : [] 

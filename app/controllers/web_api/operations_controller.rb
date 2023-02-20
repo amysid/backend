@@ -7,7 +7,9 @@ class WebApi::OperationsController < ::ApplicationController
     language = params[:locale] == "en" ? "English" : "Arabic"
     @operation.update(language: language)
     @booth = @operation.booth
-    @book.update(last_listening_at: Time.now)
+    count = @book.listen_count + 1
+    @book.update(last_listening_at: Time.now, listen_count: count) 
+    
     render json: {
       multi_data: true,
       operation: OperationSerializer.new( @operation ),
@@ -32,7 +34,7 @@ class WebApi::OperationsController < ::ApplicationController
   private
 
   def set_operation
-    @operation = Operation.find_by(number: params[:id])
+    @operation = Operation.includes(:book).where(number: params[:id]).first
   end
 
   def ensure_operation_present?

@@ -23,27 +23,27 @@ class Api::ReportsController < ::ApplicationController
           @books = Book.where(audio_type: params[:report][:duration])
         end
       end
-      if @books.present?
-        @operations = Operation.includes(:book, booth: :categories).where(book_id: @books.pluck(:id)).references(:book, booth: :categories)
+
+      @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id)))
+      @operations = @operations.includes(:book, booth: :categories).references(:book, booth: :categories) if @operations.present?
+
+      if @operations.present? && @booths.blank?
+        @booths = Booth.all.includes(:books).where(id: @operations.map(&:id))
       end
-      if @booths.present?
-        if @operations.present?
-          @operations = @operations.includes(:book, booth: :categories).where(booth_id: @booths.pluck(:id)).references(:book, booth: :categories)
-        else
-          @operations = Operation.includes(:book, booth: :categories).where(booth_id: @booths.pluck(:id)).references(:book, booth: :categories)
-        end
-      end
-      @booth_details = @operations.where(booth_id: params[:report][:booth_id]).group("booths.name").count
+      @booth_details = @operations.group("booths.name").count if @operations.present?
     else
       @operations = Operation.includes(:book, booth: :categories).references(:book, booth: :categories)
       @booths = Booth.all.includes(:books)
-      @booth_details = @operations.group("booths.name").count
+      @booth_details = @operations.group("booths.name").count if @operations.present?
     end
-    booths = @booths.map do |booth|
-      book_detail = book_detail_for(booth)
-      day_wise_info = day_wise_info_for(booth, @operations)
-      listening_count = listening_count_for(booth)
-      booth.as_json.merge!(book_detail: book_detail, day_wise_info: day_wise_info, listening_count: listening_count)
+    
+    if @booths.present?
+      booths = @booths.map do |booth|
+        book_detail = book_detail_for(booth)
+        day_wise_info = day_wise_info_for(booth, @operations)
+        listening_count = listening_count_for(booth)
+        booth.as_json.merge!(book_detail: book_detail, day_wise_info: day_wise_info, listening_count: listening_count)
+      end
     end
     data = {booth_details:  @booth_details, operations: @operations, booths: booths }
     return render json: {data: data}, status: :ok
