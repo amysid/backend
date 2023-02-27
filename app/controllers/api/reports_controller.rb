@@ -45,7 +45,14 @@ class Api::ReportsController < ::ApplicationController
         booth.as_json.merge!(book_detail: book_detail, day_wise_info: day_wise_info, listening_count: listening_count)
       end
     end
-    data = {booth_details:  @booth_details, operations: @operations, booths: booths }
+    operation_group_by_hour = nil
+    opreation_group_by_day = nil
+    if @operations.present?
+      operation_group_by_hour = @operations.group_by_hour(:created_at).count
+      opreation_group_by_day = @operations.group_by_day_of_week(:created_at, format: "%a").count
+    end
+    data = {booth_details:  @booth_details, operations: @operations, booths: booths,
+            operation_group_by_hour: operation_group_by_hour, opreation_group_by_day: opreation_group_by_day }
     return render json: {data: data}, status: :ok
   end
 
