@@ -2,21 +2,28 @@ class Api::ReportsController < ::ApplicationController
 
   def index
     if params[:report].present?
-      if params[:report][:category_id]
+      if params[:report][:category_id] == "All"
+        categories = Category.all
+        booth_ids = categories.map{|category| category.booths.map(&:id)}.flatten.compact.uniq
+        @booths = Booth.where(id: booth_ids)
+      else
         category = Category.find_by(id: params[:report][:category_id])
         @booths = category.blank? ? nil : category.booths 
       end
-      if params[:report][:booth_id].present?
-        if @booths.present?
+
+      if params[:report][:booth_id].present? && params[:report][:booth_id] != "All"
+        if @booths.present? 
           @booths = @booths.where(id: params[:report][:booth_id])
         else
           @booths = Booth.where(id: params[:report][:booth_id])
         end
       end
-      if params[:report][:language].present?
+      if params[:report][:language] == "All"
+        @books = Book.all
+      else
         @books = Book.where(language: params[:report][:language])
       end
-      if params[:report][:duration].present?
+      if params[:report][:duration].present? && params[:report][:duration] != "All"
         if @books.present?
           @books = @books.where(audio_type: params[:report][:duration])
         else
@@ -24,7 +31,11 @@ class Api::ReportsController < ::ApplicationController
         end
       end
 
-      @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id)))
+      if params[:report][:start_date].present? && params[:report][:end_date].present?
+        @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id))).where(created_at: params[:report][:start_date]..params[:report][:end_date])
+      else
+        @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id)))
+      end
       @operations = @operations.includes(:book, booth: :categories).references(:book, booth: :categories) if @operations.present?
 
       if @operations.present? && @booths.blank?
