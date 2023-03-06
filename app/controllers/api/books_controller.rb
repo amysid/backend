@@ -12,9 +12,7 @@ class Api::BooksController < ::ApplicationController
       @books = Book.all.includes(:operations).order('created_at desc')
     end
     @pagination, @books = pagy(
-      @books,
-      items: params[:page_size] || 10,
-      page: params[:page] || 1
+      @books
     )
     render_books
   end
