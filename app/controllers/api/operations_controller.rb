@@ -16,7 +16,7 @@ class Api::OperationsController < ::ApplicationController
     end
     @pagination, @operations = pagy(
       @operations,
-      items: params[:page_size] || 500,
+      items: params[:page_size] || 10,
       page: params[:page] || 1
     )
     render_operations
