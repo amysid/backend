@@ -2,7 +2,7 @@ class Api::OperationsController < ::ApplicationController
   before_action :authorize_request
   
   def index
-    if params[:operation].present? && params[:operation][:search].present?
+    if params[:operation].present? && params[:operation][:search].present? && params[:operation][:search] != "All"
       if params[:operation][:search] == "Only Comment"
         @operations = Operation.all.includes(:book, :booth).where(rating: [nil, ""]).where.not(note: [nil, ""]).order('created_at desc')
       elsif params[:operation][:search] == "Only Rate"
