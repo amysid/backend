@@ -15,9 +15,7 @@ class Api::OperationsController < ::ApplicationController
       @operations = Operation.all.includes(:book, :booth).order('created_at desc')
     end
     @pagination, @operations = pagy(
-      @operations,
-      items: params[:page_size] || 10,
-      page: params[:page] || 1
+      @operations
     )
     render_operations
   end
@@ -26,15 +24,7 @@ class Api::OperationsController < ::ApplicationController
     render json: {
       multi_data: true,
       operations: OperationSerializer.new(
-        @operations,
-        {
-          meta: {
-            total: @pagination.count,
-            page: @pagination.page,
-            page_size: @pagination.items,
-            total_pages: @pagination.pages
-          },
-        }
+        @operations
       ),
     }, status: :ok 
   end

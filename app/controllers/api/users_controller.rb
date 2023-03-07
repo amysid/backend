@@ -6,9 +6,7 @@ class Api::UsersController < ::ApplicationController
   def index
     @users = User.all.order('created_at desc')
     @pagination, @users = pagy(
-      @users,
-      items: params[:page_size] || 10,
-      page: params[:page] || 1
+      @users
     )
     render_users
   end
@@ -77,15 +75,7 @@ class Api::UsersController < ::ApplicationController
     render json: {
       multi_data: true,
       users: UserSerializer.new(
-        @users,
-        {
-          meta: {
-            total: @pagination.count,
-            page: @pagination.page,
-            page_size: @pagination.items,
-            total_pages: @pagination.pages
-          },
-        }
+        @users
       ),
     }, status: :ok 
   end

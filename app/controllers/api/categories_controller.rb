@@ -6,9 +6,7 @@ class Api::CategoriesController < ::ApplicationController
   def index
     @categories = Category.all.order('created_at desc')
     @pagination, @categories = pagy(
-      @categories,
-      items: params[:page_size] || 10,
-      page: params[:page] || 1
+      @categories
     )
     render_categories
   end
@@ -86,15 +84,7 @@ class Api::CategoriesController < ::ApplicationController
     render json: {
       multi_data: true,
       categories: CategorySerializer.new(
-        @categories,
-        {
-          meta: {
-            total: @pagination.count,
-            page: @pagination.page,
-            page_size: @pagination.items,
-            total_pages: @pagination.pages
-          },
-        }
+        @categories
       ),
     }, status: :ok 
   end
