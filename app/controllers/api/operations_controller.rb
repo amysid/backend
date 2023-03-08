@@ -14,9 +14,7 @@ class Api::OperationsController < ::ApplicationController
     else
       @operations = Operation.all.includes(:book, :booth).order('created_at desc')
     end
-    @pagination, @operations = pagy(
-      @operations
-    )
+    
     render_operations
   end
   
