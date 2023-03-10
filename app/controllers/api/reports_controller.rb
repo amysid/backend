@@ -31,10 +31,18 @@ class Api::ReportsController < ::ApplicationController
         end
       end
 
+      if params[:report][:book_id].present? && params[:report][:book_id] != "All"
+        if @books.present?
+          @books = @books.where(id: params[:report][:book_id])
+        else
+          @books = Book.where(id: params[:report][:book_id])
+        end
+      end
+
       if params[:report][:start_date].present? && params[:report][:end_date].present?
-        @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id))).where(created_at: params[:report][:start_date]..params[:report][:end_date])
+        @operations = Operation.where(book_id: @books.to_a.map(&:id)).and(Operation.where(booth_id: @booths.to_a.map(&:id))).where(created_at: params[:report][:start_date]..params[:report][:end_date])
       else
-        @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id)))
+        @operations = Operation.where(book_id: @books.to_a.map(&:id)).and(Operation.where(booth_id: @booths.to_a.map(&:id)))
       end
       @operations = @operations.includes(:book, booth: :categories).references(:book, booth: :categories) if @operations.present?
 
