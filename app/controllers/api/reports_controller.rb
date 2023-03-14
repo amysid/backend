@@ -96,7 +96,7 @@ class Api::ReportsController < ::ApplicationController
 
   def day_wise_info_for(booth, operations)
     booth_ops = operations.where(booth_id: booth.id)
-    return booth_ops.group_by_day_of_week(:created_at, format: "%a").count rescue {}
+    return booth_ops.where.not(listening_status: nil).group_by_day_of_week(:created_at, format: "%a").count rescue {}
   end
 
   def listening_count_for(booth)
