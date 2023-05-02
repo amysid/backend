@@ -6,6 +6,6 @@ class Operation < ApplicationRecord
   has_many :categories, through: :booth
   enum language: ["English", "Arabic"]
 
-  validates :note, format: { with: /\A[a-zA-Z0-9.@# !|]+\z/, message: "Input Invalid Special Charecter not Allow!" }
+#  validates :note, format: { with: /\A[a-zA-Z0-9.@# !|]+\z/, message: "Input Invalid Special Charecter not Allow!" }
 
 end

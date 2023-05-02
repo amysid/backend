@@ -2,7 +2,7 @@ class BookSerializer  < ApplicationSerializer
 
   attributes :id,  :title, :author_name, :body, :book_duration, :status, :reason_for_rejection,
               :listen_count, :last_listening_at, :created_at, :updated_at, :audio_type, :language,
-              :arabic_title, :arabic_body, :arabic_author_name, :cover, :short, :long
+              :arabic_title, :arabic_body, :arabic_author_name, :cover, :short, :longg
 
   # attribute :last_listening do |book, _params|
   #   book.operations.last.created_at if book.operations.present?
@@ -36,7 +36,7 @@ class BookSerializer  < ApplicationSerializer
 
   attribute :audio_url do |book, _params|
     #ENV["BACKEND_URL"] + Rails.application.routes.url_helpers.rails_blob_path(book.audio , only_path: true) if book.audio.present?
-    book.long
+    book.longg
   end
   
   attribute :short_audio_url do |book, _params|
