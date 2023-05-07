@@ -45,13 +45,15 @@ class Api::CategoriesController < ::ApplicationController
   def update
     @category.update({
       name: params[:category][:name],
-      logo: params[:category][:dark],
-      white_logo: params[:category][:white],
       arabic_name: params[:category][:arabic_name],
       french_name: params[:category][:french_name],
       icon: params[:category][:icon],
       white_icon: params[:category][:white_icon]
     })
+    
+    @category.logo = params[:category][:dark] if params[:category][:dark].present?
+    @category.white_logo =  params[:category][:white] if params[:category][:white].present?
+    @category.save
     render_category
   end
   
