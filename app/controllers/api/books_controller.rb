@@ -11,9 +11,7 @@ class Api::BooksController < ::ApplicationController
     else
       @books = Book.all.includes(:operations).order('created_at desc')
     end
-    @pagination, @books = pagy(
-      @books
-    )
+
     render_books
   end
   
@@ -102,15 +100,7 @@ class Api::BooksController < ::ApplicationController
     render json: {
       multi_data: true,
       books: BookSerializer.new(
-        @books,
-        {
-          meta: {
-            total: @pagination.count,
-            page: @pagination.page,
-            page_size: @pagination.items,
-            total_pages: @pagination.pages
-          },
-        }
+        @books
       ),
     }, status: :ok 
   end

@@ -31,10 +31,18 @@ class Api::ReportsController < ::ApplicationController
         end
       end
 
+      if params[:report][:book_id].present? && params[:report][:book_id] != "All"
+        if @books.present?
+          @books = @books.where(id: params[:report][:book_id])
+        else
+          @books = Book.where(id: params[:report][:book_id])
+        end
+      end
+
       if params[:report][:start_date].present? && params[:report][:end_date].present?
-        @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id))).where(created_at: params[:report][:start_date]..params[:report][:end_date])
+        @operations = Operation.where(book_id: @books.to_a.map(&:id)).and(Operation.where(booth_id: @booths.to_a.map(&:id))).where(created_at: params[:report][:start_date]..params[:report][:end_date])
       else
-        @operations = Operation.where(book_id: @books.to_a.map(&:id)).or(Operation.where(booth_id: @booths.to_a.map(&:id)))
+        @operations = Operation.where(book_id: @books.to_a.map(&:id)).and(Operation.where(booth_id: @booths.to_a.map(&:id)))
       end
       @operations = @operations.includes(:book, booth: :categories).references(:book, booth: :categories) if @operations.present?
 
@@ -62,8 +70,17 @@ class Api::ReportsController < ::ApplicationController
       operation_group_by_hour = @operations.group_by_hour(:created_at).count
       opreation_group_by_day = @operations.group_by_day_of_week(:created_at, format: "%a").count
     end
+    total_comments = @operations.to_a.select{|x| x.note.present?}.count
+    opration_having_rate = @operations.to_a.select{|x| x.rating.present? }
+    avarage_rate = opration_having_rate.present? ?  opration_having_rate.map(&:rating).map(&:to_i).sum / opration_having_rate.count : 0
+    total_listening_number = @operations.to_a.select{|x| x.listening_time.present?}.count
+    total_listening_time = @operations.to_a.map(&:listening_status).map(&:to_i).sum
+    total_listening_time = Time.at(total_listening_time).utc.strftime("%H:%M:%S")
+
     data = {booth_details:  @booth_details, operations: @operations, booths: booths,
-            operation_group_by_hour: operation_group_by_hour, opreation_group_by_day: opreation_group_by_day }
+            operation_group_by_hour: operation_group_by_hour, opreation_group_by_day: opreation_group_by_day,
+            total_comments: total_comments, avarage_rate: avarage_rate, total_listening_number: total_listening_number,
+            total_listening_time: total_listening_time }
     return render json: {data: data}, status: :ok
   end
 
@@ -79,7 +96,7 @@ class Api::ReportsController < ::ApplicationController
 
   def day_wise_info_for(booth, operations)
     booth_ops = operations.where(booth_id: booth.id)
-    return booth_ops.group_by_day_of_week(:created_at, format: "%a").count rescue {}
+    return booth_ops.where.not(listening_status: nil).group_by_day_of_week(:created_at, format: "%a").count rescue {}
   end
 
   def listening_count_for(booth)

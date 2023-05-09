@@ -8,9 +8,7 @@ class Api::BoothsController < ::ApplicationController
   def index
     @booths = Booth.all.order('created_at desc')
     @pagination, @booths = pagy(
-      @booths,
-      items: params[:page_size] || 10,
-      page: params[:page] || 1
+      @booths
     )
     render_booths
   end
@@ -91,15 +89,7 @@ class Api::BoothsController < ::ApplicationController
     render json: {
       multi_data: true,
       booths: BoothSerializer.new(
-        @booths,
-        {
-          meta: {
-            total: @pagination.count,
-            page: @pagination.page,
-            page_size: @pagination.items,
-            total_pages: @pagination.pages
-          },
-        }
+        @booths
       ),
     }, status: :ok 
   end
